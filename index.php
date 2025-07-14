@@ -24,6 +24,12 @@ if (!file_exists('documents')) {
     mkdir('documents', 0777, true);
 }
 
+$server_on = true;
+$headers = get_headers('http://localhost:8005');
+
+if (!$headers || strpos($headers[0], '404'))
+	$server_on = false;
+
 // Create department directories if they don't exist
 foreach (array_keys($departments) as $dept) {
     $dirPath = "documents/$dept";
@@ -254,7 +260,7 @@ foreach (array_keys($departments) as $dept) {
                                     echo "$docCount documents";
                                 ?>
                             </p>
-                            <a href="department.php?dept=<?php echo urlencode($key); ?>" class="btn btn-primary btn-sm">
+                            <a target="_blank" href="<?= str_replace(' ', '_', strtolower($name)) === 'technical_operation' ? ($server_on ? 'http://localhost:8005' : 'http://localhost/file-upload') : 'department.php?dept=' . urlencode($key); ?>" class="btn btn-primary btn-sm">
                                 <i class="fas fa-folder-open me-1"></i> Access
                             </a>
                             <a href="#" class="btn btn-outline-secondary btn-sm ms-2" data-bs-toggle="tooltip" title="Quick View">
